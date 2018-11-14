@@ -1,47 +1,76 @@
 import React from 'react'
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
-import { purple } from '../Utils/colors'
+import { green } from '../Utils/colors'
 import TextButton from './TextButton'
-import { removeDeck } from '../Actions/index'
 import { deleteDeckLocal } from '../Utils/storage'
 import { connect } from 'react-redux'
+import { removeDeck } from '../Actions/index'
 
 class Deck extends React.Component {
     handleDelete = () => {
-      const { dispatch } = this.props
+      const { dispatch, styles } = this.props
       const title = this.props.navigation.getParam('title')
       deleteDeckLocal(title).then(() => {
+        this.props.navigation.goBack()
         dispatch(removeDeck(title))
-        this.props.navigation.navigate('Decks')
-      })
+      }
+    )
     }
 
     render() {
+        if (this.props.deck !== undefined){
+  const title = this.props.deck.title
     return(
-    <View>
-        <Text>
-          {this.props.navigation.getParam('title')}
+    <View style={ styles.container }>
+        <Text style={ styles.deckText }>
+          { title }
         </Text>
-        <TextButton onPress={this.handleDelete}>Delete Deck</TextButton>
-        <TouchableOpacity style={styles.iosSubmitBtn} onPress={() => this.props.navigation.navigate('Card')}>
+        <Text style={ styles.deckText }>
+          Number of Cards: { this.props.deck.questions.length }
+        </Text>
+        <TextButton style={styles.deleteText} onPress={() => this.handleDelete()}>Delete Deck</TextButton>
+        <TouchableOpacity style={styles.iosSubmitBtn} onPress={() => this.props.navigation.navigate('NewQuestion', { title: title })}>
+        <Text >Add Question</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.iosSubmitBtn} onPress={() => this.props.navigation.navigate('Card', { title: title })}>
           <Text>Start Quiz</Text>
         </TouchableOpacity>
     </View>
-   )
+) } else {return null}
     }
 }
 
 const styles = StyleSheet.create(
   {
     iosSubmitBtn: {
-    backgroundColor: purple,
+    backgroundColor: green,
     padding: 10,
     borderRadius: 7,
     height: 45,
     marginLeft: 40,
     marginRight: 40,
+    marginTop: 20
   },
+  container: {
+      flex: 1,
+      justifyContent: 'center',
+  },
+  deckText: {
+      textAlign: 'center',
+      fontSize: 24
+  },
+  deleteText: {
+      textAlign: 'center',
+      marginBottom: 50
+  }
+
   }
 )
 
-export default connect()(Deck)
+function mapStateToProps (state, ownProps) {
+  return {
+    deck: state[ownProps.navigation.getParam('title')]
+  }
+}
+
+export default connect(mapStateToProps)(Deck)

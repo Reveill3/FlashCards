@@ -1,6 +1,6 @@
 export const RECEIVE_DECKS = 'RECEIVE_DECKS'
 export const ADD_DECK = 'ADD_DECK'
-export const ANSWER_QUESTION = 'ANSWER_QUESTION'
+export const UPDATE_SCORE = 'UPDATE_SCORE'
 export const REMOVE_DECK = 'REMOVE_DECK'
 export const ADD_QUESTION = 'ADD_QUESTION'
 
@@ -25,17 +25,18 @@ export function removeDeck (title) {
  }
 }
 
-export function answerQuestion (result, decktitle) {
+export function updateScore (score, decktitle) {
   return {
-    type: ANSWER_QUESTION,
-    result,
+    type: UPDATE_SCORE,
+    score,
     decktitle
   }
 }
 
-export function addQuestion (question, title) {
+export function newQuestion (question, title) {
   return {
     type: ADD_QUESTION,
-    question
+    question,
+    title
   }
 }

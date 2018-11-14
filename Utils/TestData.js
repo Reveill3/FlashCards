@@ -1,4 +1,8 @@
-{
+import { AsyncStorage } from 'react-native'
+import { STORAGE_KEY } from './storage'
+
+export function setTestData () {
+  const testData = {
   React: {
     prevScore: 0,
     title: 'React',
@@ -23,4 +27,6 @@
       }
     ]
   }
+}
+  return AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(testData))
 }
